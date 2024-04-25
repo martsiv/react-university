@@ -34,7 +34,7 @@ const columns = [
     // },
 ];
 
-const api = "http://asp-net-clean-architecture.somee.com/api/Courses";
+const api = "https://university-web.azurewebsites.net/api/Courses";
 
 export default function Courses() {
   

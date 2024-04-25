@@ -50,7 +50,7 @@ const columns = [
     // },
 ];
 
-const api = "http://asp-net-clean-architecture.somee.com/api/Teachers";
+const api = "https://university-web.azurewebsites.net/api/Teachers";
 
 export default function Teachers() {
   
