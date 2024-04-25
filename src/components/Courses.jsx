@@ -1,6 +1,7 @@
-import { Table } from "antd";
+import { Button, Space, Table } from "antd";
 import { useEffect, useState } from "react";
-
+import { getCourses } from "../services/courses";
+import { Link } from "react-router-dom";
 
 const columns = [
     {
@@ -34,17 +35,13 @@ const columns = [
     // },
 ];
 
-const api = "https://university-web.azurewebsites.net/api/Courses";
-
 export default function Courses() {
   
     const [ courses, setCourses ] = useState([]);
 
     const loadCourses = async () => {
-        const response = await fetch(api);
-        const data = await response.json();
-        console.log(data);
-        setCourses(data);
+        const response = await getCourses()
+        setCourses(response.data);
     }
 
     useEffect(() => {
@@ -52,7 +49,14 @@ export default function Courses() {
     }, []);
 
     return (
+        <>
+        <Space>
+            <Button style={{ marginBottom: 10 }} type="primary">
+                <Link to="create">Create New Course</Link>
+            </Button>
+        </Space>
         <Table columns={columns} dataSource={courses} pagination={{ pageSize: 10 }} rowKey="id" />
+    </>
     );
 }
  

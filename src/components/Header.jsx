@@ -1,54 +1,70 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Layout as AntdLayout, Menu } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { HomeOutlined, InfoCircleOutlined, ProductOutlined, UnorderedListOutlined } from '@ant-design/icons';
 
 const { Header: AntdHeader } = AntdLayout;
 
+const menuItems = [
+    {
+        key: "/",
+        label: <Link to="/">Home</Link>,
+        icon: <HomeOutlined />
+    },
+    {
+        key: "/students",
+        label: <Link to="/students">Students</Link>,
+        icon: <ProductOutlined />
+    },
+    {
+        key: "/teachers",
+        label: <Link to="/teachers">Teachers</Link>,
+        icon: <UnorderedListOutlined />
+    },
+    {
+        key: "/courses",
+        label: <Link to="/courses">Courses</Link>,
+        icon: <UnorderedListOutlined />
+    },
+    {
+        key: "/about",
+        label: <Link to="/about">About</Link>,
+        icon: <InfoCircleOutlined />
+    }
+]
+
 export default function Header() {
-    return (
-        <AntdHeader
+    let location = useLocation();
+
+    const [current, setCurrent] = useState(location.pathname);
+
+    useEffect(() => {
+        if (location) {
+            if (current !== location.pathname) {
+                setCurrent(location.pathname);
+            }
+        }
+    }, [location, current]);
+
+return (
+    <AntdHeader
+        style={{
+            display: 'flex',
+            alignItems: 'center',
+        }}
+    >
+        <div className="demo-logo" />
+        <Menu
+            theme="dark"
+            mode="horizontal"
+            defaultSelectedKeys={[current]}
+            items={menuItems}
             style={{
-                display: 'flex',
-                alignItems: 'center',
+                flex: 1,
+                minWidth: 0,
             }}
         >
-            <div className="demo-logo" />
-            <Menu
-                theme="dark"
-                mode="horizontal"
-                defaultSelectedKeys={['2']}
-                style={{
-                    flex: 1,
-                    minWidth: 0,
-                }}
-            >
-                <Menu.Item key="1">
-                    <HomeOutlined />
-                    <span>Home</span>
-                    <Link to="/" />
-                </Menu.Item>
-                <Menu.Item key="2">
-                    <ProductOutlined />
-                    <span>Students</span>
-                    <Link to="/students" />
-                </Menu.Item>
-                <Menu.Item key="3">
-                    <UnorderedListOutlined />
-                    <span>Teachers</span>
-                    <Link to="/teachers" />
-                </Menu.Item>
-                <Menu.Item key="4">
-                    <UnorderedListOutlined />
-                    <span>Courses</span>
-                    <Link to="/courses" />
-                </Menu.Item>
-                {/* <Menu.Item key="4">
-                    <InfoCircleOutlined />
-                    <span>About</span>
-                    <Link to="/about" />
-                </Menu.Item> */}
-            </Menu>
-        </AntdHeader>
-    )
+        </Menu>
+    </AntdHeader>
+)
 }

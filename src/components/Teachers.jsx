@@ -1,6 +1,7 @@
-import { Table } from "antd";
+import { Button, Space, Table } from "antd";
 import { useEffect, useState } from "react";
-
+import { getTeachers } from "../services/teachers";
+import { Link } from "react-router-dom";
 
 const columns = [
     {
@@ -50,17 +51,13 @@ const columns = [
     // },
 ];
 
-const api = "https://university-web.azurewebsites.net/api/Teachers";
-
 export default function Teachers() {
   
     const [ teachers, setTeachers ] = useState([]);
 
     const loadTeachers = async () => {
-        const response = await fetch(api);
-        const data = await response.json();
-        console.log(data);
-        setTeachers(data);
+        const response = await getTeachers()
+        setTeachers(response.data);
     }
 
     useEffect(() => {
@@ -68,7 +65,14 @@ export default function Teachers() {
     }, []);
 
     return (
+        <>
+        <Space>
+            <Button style={{ marginBottom: 10 }} type="primary">
+                <Link to="create">Create New Teacher</Link>
+            </Button>
+        </Space>
         <Table columns={columns} dataSource={teachers} pagination={{ pageSize: 10 }} rowKey="id" />
+    </>
     );
 }
  

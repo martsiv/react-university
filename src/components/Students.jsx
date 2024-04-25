@@ -1,5 +1,7 @@
-import { Table } from "antd";
+import { Button, Space, Table } from "antd";
 import { useEffect, useState } from "react";
+import { getStudents } from "../services/students";
+import { Link } from "react-router-dom";
 
 
 const columns = [
@@ -50,17 +52,13 @@ const columns = [
     // },
 ];
 
-const api = "https://university-web.azurewebsites.net/api/Students";
-
 export default function Students() {
   
     const [ students, setStudents ] = useState([]);
 
     const loadStudents = async () => {
-        const response = await fetch(api);
-        const data = await response.json();
-        console.log(data);
-        setStudents(data);
+        const response = await getStudents();
+        setStudents(response.data);
     }
 
     useEffect(() => {
@@ -68,7 +66,14 @@ export default function Students() {
     }, []);
 
     return (
-        <Table columns={columns} dataSource={students} pagination={{ pageSize: 10 }} rowKey="id" />
+        <>
+            <Space>
+                <Button style={{ marginBottom: 10 }} type="primary">
+                    <Link to="create">Create New Student</Link>
+                </Button>
+            </Space>
+            <Table columns={columns} dataSource={students} pagination={{ pageSize: 10 }} rowKey="id" />
+        </>
     );
 }
  
