@@ -77,21 +77,21 @@ export default function Teachers() {
     };
 
     useEffect(() => {
-        loadTeachers();
+      loadTeachers();
     }, []);
 
     return (
-        <>
-        <Space>
-            <Button style={{ marginBottom: 10 }} type="primary">
-                <Link to="create">Create New Teacher</Link>
-            </Button>
-            <Button style={{ marginBottom: 10 }} type="primary">
-                <Link to="edit">Edit</Link>
-            </Button>
-        </Space>
-        <Table columns={getColumns(deleteTeacher)} dataSource={teachers} pagination={{ pageSize: 10 }} rowKey="id" />
-    </>
+      <>
+        <Button style={{ marginBottom: 10 }} type="primary">
+          <Link to="edit">Edit</Link>
+        </Button>
+        <Table
+          columns={getColumns(deleteTeacher)}
+          dataSource={teachers}
+          pagination={{ pageSize: 10 }}
+          rowKey="id"
+        />
+      </>
     );
 }
  

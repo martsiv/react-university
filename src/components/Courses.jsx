@@ -21,7 +21,6 @@ function getColumns(deleteHandler) {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a href='/'>Show</a>
                     <Link to={`edit/${record.id}`}>
                         <Button icon={<EditOutlined />}></Button>
                     </Link>
