@@ -18,14 +18,13 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="students" element={<Students />} />
           <Route path="students/create" element={<CreateStudentForm />} />
-          <Route path="students/edit" element={<CreateStudentForm />} />
+          <Route path="students/edit/:id" element={<CreateStudentForm />} />
           <Route path="teachers" element={<Teachers />} />
           <Route path="teachers/create" element={<CreateTeacherForm  />} />
-          <Route path="teachers/edit" element={<CreateTeacherForm />} />
+          <Route path="teachers/edit/:id" element={<CreateTeacherForm />} />
           <Route path="courses" element={<Courses />} />
           <Route path="courses/create" element={<CreateCourseForm />} />
-          <Route path="courses/edit" element={<CreateCourseForm />} />
-          {/* <Route path="orders" element={<p>Orders</p>} /> */}
+          <Route path="courses/edit/:id" element={<CreateCourseForm />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

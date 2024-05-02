@@ -1,23 +1,27 @@
-import api from "./api";
+import axios from "axios";
 
-const route = "Teachers/";
+const api = axios.create({
+    baseURL: process.env.REACT_APP_API_URL + "Teachers/"
+});
 
-export function getTeachers() {
-    return api.get(`${route}`);
-}
-
-export function getTeacher(id) {
-    return api.get(`${route}/${id}`);
-}
-
-export function deleteTeacher(id) {
-    return api.delete(`${route}/${id}`);
-}
-
-export function postTeacher(teacher) {
-    return api.post(`${route}`, { teacher });
-}
-
-export function putTeacher(teacher) {
-    return api.put(`${route}`, { teacher });
+// ----- create service object
+export const teachersService = {
+    get: function () {
+        return api.get();
+    },
+    getById: function (id) {
+        return api.get(`${id}`);
+    },
+    getByCourse: function (id) {
+        return api.get(`/byCourse`, id);
+    },
+    create: function (model) {
+        return api.post("", model);
+    },
+    delete: function (id) {
+        return api.delete(`${id}`);
+    },
+    edit: function (model) {
+        return api.put("", model);
+    }
 }

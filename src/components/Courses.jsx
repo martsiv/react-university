@@ -1,9 +1,11 @@
-import { Button, Space, Table } from "antd";
+import { Button, message, Popconfirm, Space, Table } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
-import { getCourses } from "../services/courses";
+import { coursesService } from "../services/courses";
 import { Link } from "react-router-dom";
 
-const columns = [
+function getColumns(deleteHandler) {
+    return [
     {
         title: 'Id',
         dataIndex: 'id',
@@ -13,36 +15,50 @@ const columns = [
         title: 'Name',
         dataIndex: 'name',
         key: 'name'
-    }
-    // {
-    //     title: 'Action',
-    //     key: 'action',
-    //     render: (_, record) => (
-    //         <Space size="middle">
-    //             <a>Show</a>
-    //             <Popconfirm
-    //                 title="Delete the product"
-    //                 description={`Are you sure to delete ${record.title}?`}
-    //                 onConfirm={() => confirm(record.id)}
-    //                 okText="Yes"
-    //                 cancelText="No"
-    //                 placement="left"
-    //             >
-    //                 <Button danger icon={<DeleteOutlined />}></Button>
-    //             </Popconfirm>
-    //         </Space>
-    //     ),
-    // },
-];
+    },
+    {
+        title: 'Action',
+            key: 'action',
+            render: (_, record) => (
+                <Space size="middle">
+                    <a href='/'>Show</a>
+                    <Link to={`edit/${record.id}`}>
+                        <Button icon={<EditOutlined />}></Button>
+                    </Link>
+                    <Popconfirm
+                        title="Delete the course"
+                        description={`Are you sure to delete ${record.name}?`}
+                        onConfirm={() => deleteHandler(record.id)}
+                        okText="Yes"
+                        cancelText="No"
+                        placement="left"
+                    >
+                        <Button danger icon={<DeleteOutlined />}></Button>
+                    </Popconfirm>
+                </Space>
+            ),
+    },
+]};
 
 export default function Courses() {
   
     const [ courses, setCourses ] = useState([]);
 
     const loadCourses = async () => {
-        const response = await getCourses()
+        const response = await coursesService.get()
         setCourses(response.data);
     }
+
+    const deleteCourse = async (id) => {
+        console.log("Deleting course: ", id);
+
+        const res = await coursesService.delete(id);
+
+        if (res.status === 200) {
+            setCourses(courses.filter(x => x.id !== id));
+            message.success('Course deleted successfully!');
+        }
+    };
 
     useEffect(() => {
         loadCourses();
@@ -54,9 +70,11 @@ export default function Courses() {
             <Button style={{ marginBottom: 10 }} type="primary">
                 <Link to="create">Create New Course</Link>
             </Button>
+            <Button style={{ marginBottom: 10 }} type="primary">
+                <Link to="edit">Edit</Link>
+            </Button>
         </Space>
-        <Table columns={columns} dataSource={courses} pagination={{ pageSize: 10 }} rowKey="id" />
+        <Table columns={getColumns(deleteCourse)} dataSource={courses} pagination={{ pageSize: 10 }} rowKey="id" />
     </>
     );
 }
- 

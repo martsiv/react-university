@@ -1,125 +1,163 @@
-import React, { useEffect } from 'react';
-import { Button, Form, Input, Space, DatePicker, InputNumber } from 'antd';
-import { postTeacher } from '../services/teachers';
+import React, { useEffect, useState } from "react";
+import { Button, Form, Input, Space, InputNumber, message, DatePicker } from "antd";
+import { teachersService } from "../services/teachers";
+import { useNavigate, useParams } from "react-router-dom";
+import moment from "moment";
 
-export default function CreateTeacherForm({ teacher }) {
+let teacher = null;
 
-    useEffect(() => {
-        if (teacher) {
-            form.setFieldsValue(teacher);
-        }
-    }, []);
+export default function CreateTeacherForm() {
+  const [form] = Form.useForm();
+  const params = useParams();
+  const navigate = useNavigate();
+  const [editMode, setEditMode] = useState(false);
 
-    const [form] = Form.useForm();
+  const loadInitialTeacher = async () => {
+    if (params.id) {
+      setEditMode(true);
 
-    const onFinish = (values) => {
-        postTeacher(values)
-    };
-    const onReset = () => {
-        form.resetFields();
-    };
+      const res = await teachersService.getById(params.id);
 
-    return (
-        <>
-            <h1>Create New Teacher</h1>
-            <Form
-                form={form}
-                name="control-hooks"
-                onFinish={onFinish}
-                style={{
-                    maxWidth: 600,
-                    margin: "auto"
-                }}
-                layout="vertical"
-            >
-                <Form.Item
-                    name="name"
-                    label="Name"
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                    style={{
-                        flexGrow: 1
-                    }}
+      if (res.status !== 200) return; // todo: throw exception
 
-                >
-                    <Input placeholder="Enter first name" />
-                </Form.Item>
+      res.data.birthDate = moment(res.data.birthDate);
 
-                <div style={col2}>
+      teacher = res.data;
+      form.setFieldsValue(res.data);
+    }
+  };
 
-                <Form.Item
-                    name="surname"
-                    label="surname"
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                    style={{
-                        flexGrow: 1
-                    }}
+  useEffect(() => {
+    loadInitialTeacher();
+  }, []);
 
-                >
-                    <Input placeholder="Enter surname name" />
-                </Form.Item>
+  const onFinish = async (values) => {
+    console.log(values);
 
-                    <Form.Item
-                        name="datePicker"
-                        label="DatePicker"
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
-                        style={{ flexGrow: 1 }}
-                    >
-                        <DatePicker />
-                    </Form.Item>
-                </div>
+    if (editMode) {
+      values.id = teacher.id;
 
-                <Form.Item
-                    name="workExperienceFullYears"
-                    label="workExperienceFullYears"
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                    style={{
-                        flexGrow: 1
-                    }}
+      const res = await teachersService.edit(values);
 
-                >
-                    <InputNumber
-                            style={{
-                                width: '100%',
-                            }}
-                            prefix="years"
-                            placeholder="Enter your work experience in years"
-                        />
-                </Form.Item>
+      if (res.status === 200) {
+        message.success("Teacher edited successfully!");
+      }
+    } else {
+      // send to server
+      const res = await teachersService.create(values);
 
-                <Form.Item style={{
-                    textAlign: "center"
-                }}>
-                    <Space>
-                        <Button type="primary" htmlType="submit">
-                            Create
-                        </Button>
-                        <Button htmlType="button" onClick={onReset}>
-                            Reset
-                        </Button>
-                    </Space>
-                </Form.Item>
-            </Form>
-        </>
-    );
-};
+      if (res.status === 200) {
+        message.success("Teacher created successfully!");
+      }
+    }
+
+    navigate(-1);
+  };
+  const onReset = () => {
+    form.resetFields();
+  };
+
+  return (
+    <>
+      <h1 style={{ textAlign: "center" }}>
+        {editMode ? "Edit" : "Create"} Teacher
+      </h1>{" "}
+      <Form
+        form={form}
+        name="control-hooks"
+        onFinish={onFinish}
+        style={{
+          maxWidth: 600,
+          margin: "auto",
+        }}
+        layout="vertical"
+      >
+        <Form.Item
+          name="name"
+          label="Name"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+          style={{
+            flexGrow: 1,
+          }}
+        >
+          <Input placeholder="Enter first name" />
+        </Form.Item>
+
+        <div style={col2}>
+          <Form.Item
+            name="surname"
+            label="surname"
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+            style={{
+              flexGrow: 1,
+            }}
+          >
+            <Input placeholder="Enter surname name" />
+          </Form.Item>
+
+          <Form.Item
+            name="birthDate"
+            label="birthDate"
+            rules={[
+              {
+                required: true,
+                message: "Please select birth date",
+              },
+            ]}
+          >
+            <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
+          </Form.Item>
+        </div>
+
+        <Form.Item
+          name="workExperienceFullYears"
+          label="workExperienceFullYears"
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+          style={{
+            flexGrow: 1,
+          }}
+        >
+          <InputNumber
+            style={{
+              width: "100%",
+            }}
+            prefix="years"
+            placeholder="Enter your work experience in years"
+          />
+        </Form.Item>
+
+        <Form.Item
+          style={{
+            textAlign: "center",
+          }}
+        >
+          <Space>
+            <Button type="primary" htmlType="submit">
+              {editMode ? "Edit" : "Create"}
+            </Button>
+            <Button htmlType="button" onClick={onReset}>
+              Reset
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </>
+  );
+}
 
 const col2 = {
-    display: "flex",
-    gap: 10
-}
+  display: "flex",
+  gap: 10,
+};

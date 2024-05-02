@@ -1,15 +1,18 @@
-import api from "./api";
+import axios from "axios";
 
-const route = "CoursesStudents/";
+const api = axios.create({
+    baseURL: process.env.REACT_APP_API_URL + "CoursesStudents/"
+});
 
-export function getCoursesStudents(courseId, studentId) {
-    return api.get(`${route}`, {courseId, studentId});
-}
-
-export function postCoursesStudents(courseId, studentId) {
-    return api.post(`${route}`, { courseId, studentId });
-}
-
-export function deleteCoursesStudents(courseId, studentId) {
-    return api.delete(`${route}`, { courseId, studentId });
+// ----- create service object
+export const coursesStudentsService = {
+    get: function (courseId, studentId) {
+        return api.get("", {courseId, studentId});
+    },
+    create: function (courseId, studentId) {
+        return api.post("", { courseId, studentId });
+    },
+    delete: function (courseId, studentId) {
+        return api.delete("", { courseId, studentId });
+    }
 }
