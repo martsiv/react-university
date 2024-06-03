@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Layout as AntdLayout, Menu } from 'antd';
 import { Link, useLocation } from 'react-router-dom';
-import { HomeOutlined, InfoCircleOutlined, ProductOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import { HomeOutlined, InfoCircleOutlined, ProductOutlined, UnorderedListOutlined, CalendarOutlined } from '@ant-design/icons';
 
 const { Header: AntdHeader } = AntdLayout;
 
@@ -25,6 +25,11 @@ const menuItems = [
         key: "/courses",
         label: <Link to="/courses">Courses</Link>,
         icon: <UnorderedListOutlined />
+    },
+    {
+        key: "/events",
+        label: <Link to="/events">Events</Link>,
+        icon: <CalendarOutlined />
     },
     {
         key: "/about",

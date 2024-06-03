@@ -9,6 +9,8 @@ import Courses from './components/Courses';
 import CreateStudentForm from './components/Student';
 import CreateCourseForm from './components/Course';
 import CreateTeacherForm from './components/Teacher';
+import LessonEvents from './components/LessonEvents';
+import CreateLessonEventForm from './components/LessonEvent';
 
 const App = () => {
   return (
@@ -25,6 +27,8 @@ const App = () => {
           <Route path="courses" element={<Courses />} />
           <Route path="courses/create" element={<CreateCourseForm />} />
           <Route path="courses/edit/:id" element={<CreateCourseForm />} />
+          <Route path="events" element={<LessonEvents />} />
+          <Route path="events/create" element={<CreateLessonEventForm />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
